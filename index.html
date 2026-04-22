@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy Birthday 💖</title>
+
+    <style>
+      body {
+        margin: 0;
+        font-family: "Segoe UI", sans-serif;
+        background: linear-gradient(to right, #ff9a9e, #fad0c4);
+        text-align: center;
+        color: white;
+        overflow-x: hidden;
+      }
+
+      h1 {
+        margin-top: 50px;
+        font-size: 3em;
+      }
+
+      p {
+        font-size: 1.2em;
+        max-width: 600px;
+        margin: 20px auto;
+        white-space: pre-line;
+      }
+
+      button {
+        padding: 12px 25px;
+        border: none;
+        border-radius: 25px;
+        background: white;
+        color: #ff4b5c;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 5px;
+      }
+
+      button:hover {
+        background: #ff4b5c;
+        color: white;
+      }
+
+      .heart {
+        position: fixed;
+        top: -10px;
+        font-size: 20px;
+        animation: fall linear forwards;
+      }
+
+      @keyframes fall {
+        to {
+          transform: translateY(100vh);
+          opacity: 0;
+        }
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        justify-content: center;
+        align-items: center;
+        z-index: 999;
+      }
+
+      .modal-content {
+        background: white;
+        color: #ff4b5c;
+        padding: 25px;
+        border-radius: 20px;
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-sizing: border-box;
+      }
+
+      /* ✅ FIX: batasi ukuran gambar */
+      img#meme {
+        width: 100%;
+        max-height: 220px;
+        object-fit: contain;
+        border-radius: 15px;
+        margin-bottom: 10px;
+      }
+
+      /* SHAKE */
+      .shake {
+        animation: shake 0.4s;
+      }
+
+      @keyframes shake {
+        0% {
+          transform: translate(2px, 2px);
+        }
+        25% {
+          transform: translate(-3px, -3px);
+        }
+        50% {
+          transform: translate(3px, -2px);
+        }
+        75% {
+          transform: translate(-2px, 3px);
+        }
+        100% {
+          transform: translate(0, 0);
+        }
+      }
+
+      /* TEKS BRUTAL */
+      #brutalText {
+        font-size: 2em;
+        color: red;
+        opacity: 0;
+        transform: scale(0.5);
+        margin: 10px 0;
+      }
+
+      .showText {
+        opacity: 1 !important;
+        transform: scale(1.3) !important;
+        animation: popText 0.4s ease;
+        text-shadow:
+          0 0 10px red,
+          0 0 20px pink;
+      }
+
+      .hidden {
+        opacity: 0;
+      }
+
+      @keyframes popText {
+        0% {
+          transform: scale(0.5);
+        }
+        50% {
+          transform: scale(1.6);
+        }
+        100% {
+          transform: scale(1.3);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>🎉 Happy Birthday Sayang 💖</h1>
+    <p id="message"></p>
+
+    <button onclick="startSurprise()">Klik untuk Kejutan 🎁</button>
+
+    <!-- musik -->
+    <iframe
+      id="music"
+      width="0"
+      height="0"
+      src="https://www.youtube.com/embed/_z-1fTlSDF0"
+      allow="autoplay"
+    ></iframe>
+
+    <!-- AUDIO -->
+    <audio id="laughSound" preload="auto">
+      <source src="sounds/laugh.mp3" type="audio/mpeg" />
+    </audio>
+
+    <!-- modal -->
+    <div class="modal" id="modal">
+      <div class="modal-content">
+        <h2>💖 Surprise 💖</h2>
+
+        <img id="meme" src="" alt="meme" />
+
+        <h1 id="brutalText" class="hidden">MAKIN TUA LO 😭</h1>
+
+        <p id="modalText"></p>
+
+        <button onclick="nextSlide()">Next 👉</button>
+        <button onclick="closeModal()">Tutup</button>
+      </div>
+    </div>
+
+    <script>
+      const text = "Selamat ulang tahun yaa 😆🎂\nSiap-siap ya... 😏";
+
+      let i = 0;
+      let currentSlide = 0;
+
+      const slides = [
+        {
+          img: "images/hepi.jpg",
+          text: "hepi birthday tu yu 😆🎂",
+        },
+        {
+          img: "images/hahaha_tua.jpg",
+          text: "HAHAHA TUA 😭🤣",
+        },
+      ];
+
+      function typeWriter() {
+        if (i < text.length) {
+          document.getElementById("message").innerHTML += text.charAt(i);
+          i++;
+          setTimeout(typeWriter, 40);
+        }
+      }
+
+      function startSurprise() {
+        typeWriter();
+        createHearts();
+
+        const laugh = document.getElementById("laughSound");
+        laugh.muted = true;
+        laugh.play().then(() => {
+          laugh.pause();
+          laugh.currentTime = 0;
+          laugh.muted = false;
+        });
+
+        document.getElementById("music").src =
+          "https://www.youtube.com/embed/_z-1fTlSDF0?autoplay=1&loop=1&playlist=_z-1fTlSDF0";
+
+        showSlide();
+        document.getElementById("modal").style.display = "flex";
+      }
+
+      function showSlide() {
+        document.getElementById("meme").src = slides[currentSlide].img;
+        document.getElementById("modalText").innerText =
+          slides[currentSlide].text;
+      }
+
+      function nextSlide() {
+        currentSlide++;
+
+        const brutalText = document.getElementById("brutalText");
+
+        if (currentSlide === 1) {
+          const laugh = document.getElementById("laughSound");
+          laugh.pause();
+          laugh.currentTime = 0;
+          laugh.play().catch(() => {
+            alert("Klik sekali lagi biar bunyi 😆");
+          });
+
+          brutalText.classList.remove("hidden");
+          brutalText.classList.add("showText");
+
+          const modal = document.querySelector(".modal-content");
+          modal.classList.add("shake");
+          setTimeout(() => {
+            modal.classList.remove("shake");
+          }, 400);
+        } else {
+          brutalText.classList.remove("showText");
+          brutalText.classList.add("hidden");
+        }
+
+        if (currentSlide >= slides.length) currentSlide = 0;
+        showSlide();
+      }
+
+      function closeModal() {
+        document.getElementById("modal").style.display = "none";
+      }
+
+      function createHearts() {
+        setInterval(() => {
+          const heart = document.createElement("div");
+          heart.classList.add("heart");
+          heart.innerHTML = "💖";
+          heart.style.left = Math.random() * 100 + "vw";
+          heart.style.animationDuration = Math.random() * 2 + 3 + "s";
+          document.body.appendChild(heart);
+          setTimeout(() => {
+            heart.remove();
+          }, 5000);
+        }, 200);
+      }
+    </script>
+  </body>
+</html>
